@@ -47,14 +47,28 @@ class DashboardScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               // ---- Welcome Text ----
-              const Text(
-                "Welcome to Dashboard",
+              Row(
+                children: [
+                  const Text(
+                    "Welcome",
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  SizedBox(width: 5,),
+                   const Text(
+                "to Dashboard",
                 style: TextStyle(
-                  color: AppColors.primaryColor,
-                  fontSize: 22,
+                  color: Colors.black,
+                  fontSize: 24,
                   fontWeight: FontWeight.w700,
                 ),
               ),
+                ],
+              ),
+               
               const SizedBox(height: 8),
               const Text(
                 "Track your calm level, power up your mood, and keep your stress low.",
