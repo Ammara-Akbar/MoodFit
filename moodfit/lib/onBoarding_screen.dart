@@ -1,158 +1,159 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:moodfit/common_widgets/custom_button.dart';
+import 'package:moodfit/auth/login_screen.dart';
 import 'package:moodfit/utils/colors.dart';
 
-import 'utils/my_images.dart';
-
-/// The onboarding screen replicating the provided design.
-class OnboardingScreen extends StatelessWidget {
+class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
-  // List of menu items with their title, subtitle, and icon data
-  static final List<_OnboardingItem> _items = [
-    _OnboardingItem(
-      title: 'Affirmations',
-      subtitle: 'Daily reminders that uplift your soul and guide your mindset.',
-      icon: MyImages.markIcon
-    ),
-    _OnboardingItem(
-      title: 'Challenges',
-      subtitle: 'Small, weekly actions that create lasting change.',
-      icon: MyImages.challengeIcon
-    ),
-    _OnboardingItem(
-      title: 'Journaling',
-      subtitle: 'A private space to reflect, release, and rediscover yourself.',
-     icon: MyImages.diaryIcon
-    ),
-    _OnboardingItem(
-      title: 'Grace Time',
-      subtitle: 'Dedicate 39 minutes to reconnect with your inner peace.',
-    icon: MyImages.timeSandIcon
-    ),
-    _OnboardingItem(
-      title: 'Shop',
-      subtitle: 'Mindful products to enrich your journey—from teas to tools.',
-     icon: MyImages.shopIcon
-    ),
+  @override
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  final List<Map<String, dynamic>> _onboardingData = [
+    {
+      "image": "assets/onboarding 1.png", // replace with your asset
+      "title": "Instant Stress Relief",
+      "description": "Breathe, play or take quick challenges to relax anytime.",
+    },
+    {
+      "image": "assets/onboarding 2.png", // replace with your asset
+      "title": "Mind + Body Tracking",
+      "description":
+          "Log mood, stress, weight, and meals — see real progress, not just numbers.",
+    },
   ];
+
+  void _nextPage() {
+    if (_currentPage < _onboardingData.length - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+    }
+  }
+
+  void _previousPage() {
+    if (_currentPage > 0) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-
-              // Logo at the top center
-              Center(
-                child: Image.asset(
-                MyImages.appLogo,
-                  width: 120,
-                  height: 120,
-                  fit: BoxFit.contain,
+      body: PageView.builder(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        onPageChanged: (index) {
+          setState(() {
+            _currentPage = index;
+          });
+        },
+        itemCount: _onboardingData.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 60),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                // --- Image ---
+                Image.asset(
+                  _onboardingData[index]["image"],
+                  height: 140,
                 ),
-              ),
+                SizedBox(height: 35),
 
-              const SizedBox(height: 24),
-
-              // List of onboarding items
-              Expanded(
-                child: ListView.separated(
-                  itemCount: _items.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final item = _items[index];
-                    return _OnboardingCard(
-                      title: item.title,
-                      subtitle: item.subtitle,
-                      image: item.icon,
-                    );
-                  },
+                // --- Title ---
+                Text(
+                  _onboardingData[index]["title"],
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF2D3E50),
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
+                const SizedBox(height: 5),
+                // --- Description ---
+                Text(
+                  _onboardingData[index]["description"],
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black54,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
 
-              // Bottom button
+                const SizedBox(height: 35),
 
-              CustomButton(
-                  ontap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => SignInScreen()));
-                  },
-                  text: "Start Your Journey"),
-              const SizedBox(height: 30),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// A data model for each onboarding menu item.
-class _OnboardingItem {
-  final String title;
-  final String subtitle;
-  final String icon;
-
-  const _OnboardingItem({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-  });
-}
-
-/// A styled card widget representing one onboarding option.
-class _OnboardingCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String image;
-
-  const _OnboardingCard({
-    required this.title,
-    required this.subtitle,
-    required this.image,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.borderColor)),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
-        leading: Image.asset(
-          image,
-          height: 28,
-          colorBlendMode: BlendMode.srcIn,
-        ),
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-        ),
-        subtitle: Text(
-          subtitle,
-          style: const TextStyle(
-            fontSize: 12,
-            color: AppColors.greyText,
-          ),
-        ),
-        // No onTap for now; add as needed
+                // --- Buttons Row ---
+                Row(
+                  children: [
+                    if (_currentPage > 0)
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: _previousPage,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: AppColors.primaryColor2,
+                            elevation: 0,
+                            side: const BorderSide(
+                                color: AppColors.primaryColor2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          child: const Text(
+                            "Back",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ),
+                    if (_currentPage > 0) const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _nextPage,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: const Text(
+                          "Next",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

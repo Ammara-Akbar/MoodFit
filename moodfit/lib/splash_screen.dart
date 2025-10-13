@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:moodfit/utils/my_images.dart';
-
+import 'package:moodfit/auth/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'onBoarding_screen.dart';
+import 'package:moodfit/utils/my_images.dart'; // for appLogo path
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,23 +15,22 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _checkLoginAndNavigate();
+    _navigateAfterDelay();
   }
-  
 
-  Future<void> _checkLoginAndNavigate() async {
-    await Future.delayed(const Duration(seconds: 4)); // Splash delay
+  Future<void> _navigateAfterDelay() async {
+    await Future.delayed(const Duration(seconds: 3)); // Splash delay
 
-    final user = FirebaseAuth.instance.currentUser;
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstTime = prefs.getBool('isFirstTime') ?? true;
 
-    if (user != null) {
-      // User already logged in, go directly to home screen
+    if (isFirstTime) {
+      await prefs.setBool('isFirstTime', false);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const OnboardingScreen()),
       );
     } else {
-      // User not logged in, show onboarding first
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const OnboardingScreen()),
@@ -41,34 +41,39 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        fit: StackFit.expand,
         children: [
-          Center(
-            child: Image.asset(
-              MyImages.appLogo,
-              height: 250,
-              width: 250,
-            ),
+          // Background image
+          Image.asset(
+            'assets/background.jpg', // replace with your uploaded image path
+            fit: BoxFit.cover,
           ),
-          // const SizedBox(height: 15),
-          // Text(
-          //   "Soulfull Care Co",
-          //   style: TextStyle(
-          //       fontSize: 24,
-          //       fontWeight: FontWeight.w600,
-          //       color: AppColors.primaryBlueColor),
-          // ),
-          // Text(
-          //   "Nourish your soul, one \nmindful moment at a time",
-          //   style: TextStyle(
-          //       fontSize: 16,
-          //       fontWeight: FontWeight.w500,
-          //       color: AppColors.primaryBrownColor),
-          //   textAlign: TextAlign.center,
-          // ),
+
+          // Overlay design (as in 2nd image)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Center app logo text
+              Text(
+                "Mood",
+                style: TextStyle(
+                  fontSize: 38,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade600,
+                ),
+              ),
+              Text(
+                "Fit",
+                style: TextStyle(
+                  fontSize: 38,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal.shade400,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

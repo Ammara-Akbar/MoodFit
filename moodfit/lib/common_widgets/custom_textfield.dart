@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skinapp/utils/colors.dart';
+import 'package:moodfit/utils/colors.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
@@ -54,7 +54,7 @@ class CustomTextField extends StatelessWidget {
                       state.didChange(val);
                     },
                     keyboardType: keyboardType,
-                    cursorColor: AppColors.primaryBlueColor,
+                    cursorColor: AppColors.primaryColor,
                     decoration: InputDecoration(
                       // prefixIcon: Padding(
                       //   padding: const EdgeInsets.all(14.0),
@@ -76,7 +76,7 @@ class CustomTextField extends StatelessWidget {
                       ),
                       focusedBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(6)),
-                        borderSide: BorderSide(color: AppColors.primaryBlueColor),
+                        borderSide: BorderSide(color: AppColors.primaryColor),
                       ),
                     ),
                     // validator: validator,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skinapp/utils/colors.dart';
+import 'package:moodfit/utils/colors.dart';
 
 class CustomPasswordField extends StatefulWidget {
   final TextEditingController? controller;
@@ -65,7 +65,7 @@ class _CustomPasswordFieldState extends State<CustomPasswordField> {
                     onChanged: (val) {
                       state.didChange(val);
                     },
-                    cursorColor: AppColors.primaryBlueColor,
+                    cursorColor: AppColors.primaryColor,
                     decoration: InputDecoration(
                       // prefixIcon: Padding(
                       //   padding: const EdgeInsets.all(14.0),
@@ -95,7 +95,7 @@ class _CustomPasswordFieldState extends State<CustomPasswordField> {
                       ),
                       focusedBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(6)),
-                        borderSide: BorderSide(color: AppColors.primaryBlueColor),
+                        borderSide: BorderSide(color: AppColors.primaryColor),
                       ),
                     ),
                   ),
