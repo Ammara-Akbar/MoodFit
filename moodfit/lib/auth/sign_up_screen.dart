@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:moodfit/auth/sign_up_screen.dart';
+import 'package:moodfit/auth/login_screen.dart';
 import 'package:moodfit/utils/colors.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+    SignUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final _emailCtrl = TextEditingController();
+class _SignUpScreenState extends State<SignUpScreen> {
+    final _emailCtrl = TextEditingController();
+    final _nameCtrl = TextEditingController();
+
+
   final _passwordCtrl = TextEditingController();
+
   bool rememberMe = false;
 
   @override
@@ -24,8 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 60),
-
+              
               // App Title
               RichText(
                 text: TextSpan(
@@ -50,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 16),
 
               const Text(
-                "Log in to your Account",
+                "Create an Account",
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
@@ -59,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 6),
               const Text(
-                "Welcome back! Please enter your details.",
+                "Welcome to the MoodFit! Let's get started",
                 style: TextStyle(
                   fontSize: 14,
                   color: Color(0xFF717171),
@@ -67,6 +70,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 30),
+               // Email Label + Field
+              _buildLabel("Name"),
+              TextField(
+                cursorColor: AppColors.primaryColor,
+                controller: _nameCtrl,
+                decoration: _inputDecoration("Enter your Name"),
+                keyboardType: TextInputType.text,
+              ),
+              const SizedBox(height: 18),
 
               // Email Label + Field
               _buildLabel("Email"),
@@ -86,41 +98,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 obscureText: true,
                 decoration: _inputDecoration("Enter Password"),
               ),
-              const SizedBox(height: 8),
-
-              // Remember me + Forgot password
-              Row(
-                children: [
-                  Checkbox(
-                    
-                    value: rememberMe,
-                    onChanged: (v) => setState(() => rememberMe = v ?? false),
-                    activeColor: AppColors.primaryColor,
-                  
-                    shape: RoundedRectangleBorder(
-                    
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                  const Text(
-                    "Remember me",
-                    style: TextStyle(fontSize: 14, color: Color(0xFF444444)),
-                  ),
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const Text(
-                      "Forgot Password",
-                      style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 18),
+               // Password Label + Field
+              _buildLabel("Confirm Password"),
+              TextField(
+                cursorColor: AppColors.primaryColor,
+                controller: _passwordCtrl,
+                obscureText: true,
+                decoration: _inputDecoration("Enter Confirm Password"),
               ),
-              const SizedBox(height: 10),
+             
+              const SizedBox(height: 20),
 
               // Login Button
               SizedBox(
@@ -135,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   child: const Text(
-                    "Login",
+                    "Sign Up",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -215,7 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    "Don’t have an account?",
+                    "Already have an account?",
                     style: TextStyle(
                       fontSize: 14,
                       color: Color(0xFF444444),
@@ -227,11 +215,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) =>  SignUpScreen()),
+                            builder: (_) => const LoginScreen()),
                       );
                     },
                     child: const Text(
-                      "SignUp",
+                      "Login",
                       style: TextStyle(
                         color: AppColors.primaryColor,
                         fontSize: 16,
