@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moodfit/screens/daily_challenges_screen.dart';
+import 'package:moodfit/screens/games_screen.dart';
 import 'package:moodfit/utils/colors.dart';
 
 // Import your actual screens here
@@ -34,7 +35,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
   // 👇 Add your actual screens here
   final List<Widget> screens = const [
     DashboardScreen(),
-    Center(child: Text("Games Screen")),
+   GamesScreen(),
     DailyChallengesScreen(),
     Center(child: Text("Settings Screen")),
   ];
