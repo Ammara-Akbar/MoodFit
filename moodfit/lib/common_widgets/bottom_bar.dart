@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:moodfit/utils/colors.dart';
 
+// Import your actual screens here
+import 'package:moodfit/screens/dashboard_screen.dart';
+
 class MyBottomBar extends StatefulWidget {
   const MyBottomBar({super.key});
 
@@ -27,6 +30,14 @@ class _MyBottomBarState extends State<MyBottomBar> {
     "Settings",
   ];
 
+  // 👇 Add your actual screens here
+  final List<Widget> screens = const [
+    DashboardScreen(),
+    Center(child: Text("Games Screen")),
+    Center(child: Text("Daily Challenges Screen")),
+    Center(child: Text("Settings Screen")),
+  ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -37,16 +48,14 @@ class _MyBottomBarState extends State<MyBottomBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Text(
-          "Page ${_selectedIndex + 1}",
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-        ),
-      ),
+
+      // 👇 Load selected screen dynamically
+      body: screens[_selectedIndex],
+
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(16),
             topRight: Radius.circular(16),
           ),
@@ -68,7 +77,7 @@ class _MyBottomBarState extends State<MyBottomBar> {
             return AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
-              width: isSelected ? 130 : 50, // expands selected tab
+              width: isSelected ? 130 : 50,
               height: 36,
               margin: const EdgeInsets.symmetric(horizontal: 4),
               decoration: BoxDecoration(
