@@ -63,6 +63,10 @@ flutter:
     - assets/
     - assets/background.jpg
     - assets/google.png
+    - assets/dashboard.png
+    - assets/emoji1.png
+    - assets/chalenges1.png
+    - assets/setting1.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

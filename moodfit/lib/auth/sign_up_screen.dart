@@ -3,16 +3,15 @@ import 'package:moodfit/auth/login_screen.dart';
 import 'package:moodfit/utils/colors.dart';
 
 class SignUpScreen extends StatefulWidget {
-    SignUpScreen({super.key});
+  SignUpScreen({super.key});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-    final _emailCtrl = TextEditingController();
-    final _nameCtrl = TextEditingController();
-
+  final _emailCtrl = TextEditingController();
+  final _nameCtrl = TextEditingController();
 
   final _passwordCtrl = TextEditingController();
 
@@ -28,13 +27,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              
               // App Title
               RichText(
                 text: TextSpan(
                   text: "Mood",
                   style: const TextStyle(
-                    color: Color(0xFF4F8EF7),
+                    color: AppColors.primaryColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 32,
                   ),
@@ -42,7 +40,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     TextSpan(
                       text: "Fit",
                       style: TextStyle(
-                        color: Color(0xFF28C7A8),
+                        color: AppColors.primaryColor2,
                         fontWeight: FontWeight.bold,
                         fontSize: 32,
                       ),
@@ -70,7 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               const SizedBox(height: 30),
-               // Email Label + Field
+              // Email Label + Field
               _buildLabel("Name"),
               TextField(
                 cursorColor: AppColors.primaryColor,
@@ -99,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 decoration: _inputDecoration("Enter Password"),
               ),
               const SizedBox(height: 18),
-               // Password Label + Field
+              // Password Label + Field
               _buildLabel("Confirm Password"),
               TextField(
                 cursorColor: AppColors.primaryColor,
@@ -107,7 +105,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 obscureText: true,
                 decoration: _inputDecoration("Enter Confirm Password"),
               ),
-             
+
               const SizedBox(height: 20),
 
               // Login Button
@@ -176,7 +174,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () {},
-                      icon: const Icon(Icons.apple, color: Colors.white, size: 24),
+                      icon: const Icon(Icons.apple,
+                          color: Colors.white, size: 24),
                       label: const Text(
                         "Login with Apple",
                         style: TextStyle(
@@ -214,8 +213,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (_) => const LoginScreen()),
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
                       );
                     },
                     child: const Text(
@@ -255,8 +253,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   InputDecoration _inputDecoration(String hint) {
     return InputDecoration(
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       hintText: hint,
       hintStyle: const TextStyle(
         fontSize: 13,

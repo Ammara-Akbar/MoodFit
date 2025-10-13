@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moodfit/auth/sign_up_screen.dart';
+import 'package:moodfit/common_widgets/bottom_bar.dart';
 import 'package:moodfit/utils/colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -127,7 +128,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyBottomBar()));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
                     shape: RoundedRectangleBorder(
