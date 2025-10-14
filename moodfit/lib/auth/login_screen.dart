@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moodfit/auth/reset_password_screen.dart';
 import 'package:moodfit/auth/sign_up_screen.dart';
 import 'package:moodfit/common_widgets/bottom_bar.dart';
 import 'package:moodfit/utils/colors.dart';
@@ -32,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: TextSpan(
                   text: "Mood",
                   style: const TextStyle(
-                    color: Color(0xFF4F8EF7),
+                    color: AppColors.primaryColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 32,
                   ),
@@ -40,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextSpan(
                       text: "Fit",
                       style: TextStyle(
-                        color: Color(0xFF28C7A8),
+                        color: AppColors.primaryColor2,
                         fontWeight: FontWeight.bold,
                         fontSize: 32,
                       ),
@@ -109,7 +110,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const Spacer(),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ResetPasswordScreen()));
+
+                    },
                     child: const Text(
                       "Forgot Password",
                       style: TextStyle(
