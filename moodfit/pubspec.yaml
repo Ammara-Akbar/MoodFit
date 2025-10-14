@@ -71,6 +71,7 @@ flutter:
     - assets/breathperson.png
     - assets/colormatch.png
     - assets/tapfocus.png
+    - assets/profile1.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

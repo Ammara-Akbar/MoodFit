@@ -68,6 +68,8 @@ class DailyChallengesScreen extends StatelessWidget {
 
               // ---- Challenge 1: Take 5 Deep Breaths ----
               Container(
+                width: double.infinity,
+
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF1FBF5),
@@ -152,6 +154,8 @@ class DailyChallengesScreen extends StatelessWidget {
 
               // ---- Challenge 2: Rate Your Mood Twice ----
               Container(
+                width: double.infinity,
+
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3F6FF),
@@ -209,6 +213,8 @@ class DailyChallengesScreen extends StatelessWidget {
 
               // ---- Reward Tracker ----
               Container(
+                width: double.infinity,
+
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF1FBF5),

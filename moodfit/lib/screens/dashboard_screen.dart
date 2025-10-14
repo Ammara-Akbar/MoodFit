@@ -82,6 +82,8 @@ class DashboardScreen extends StatelessWidget {
 
               // ---- Stress Meter Card ----
               Container(
+                width: double.infinity,
+
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF1FBF5),
@@ -137,6 +139,8 @@ class DashboardScreen extends StatelessWidget {
 
               // ---- Mood Power-Up Card ----
               Container(
+                width: double.infinity,
+
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3F6FF),
@@ -192,6 +196,8 @@ class DashboardScreen extends StatelessWidget {
 
               // ---- Games Card ----
               Container(
+                width: double.infinity,
+
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF1FBF5),
@@ -232,6 +238,7 @@ class DashboardScreen extends StatelessWidget {
 
               // ---- Challenges Card ----
               Container(
+                width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3F6FF),
