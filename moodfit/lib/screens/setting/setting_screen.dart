@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:moodfit/screens/setting/avatar_editing_screen.dart';
 import 'package:moodfit/utils/colors.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -153,7 +154,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         width: 100,
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => AvatarEditingScreen()),
+                          );
+                        },
                         child: const Text(
                           "Update Avatar",
                           style: TextStyle(
