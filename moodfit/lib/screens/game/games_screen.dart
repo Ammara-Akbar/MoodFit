@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moodfit/screens/game/breath_challenge_screen.dart';
 import 'package:moodfit/utils/colors.dart';
 
 class GamesScreen extends StatelessWidget {
@@ -71,6 +72,13 @@ class GamesScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _buildGameCard(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => BreathChallengeScreen()),
+                        );
+                      },
                       title: "Breath Challenge",
                       description:
                           "Follow the rhythm and breathe with the circle.",
@@ -80,6 +88,7 @@ class GamesScreen extends StatelessWidget {
                   const SizedBox(width: 14),
                   Expanded(
                     child: _buildGameCard(
+                      onTap: () {},
                       title: "Tap to Focus",
                       description: "Pop the bubbles before time runs out.",
                       iconPath: "assets/tapfocus.png",
@@ -92,6 +101,7 @@ class GamesScreen extends StatelessWidget {
 
               // ---- Custom Row 2 (Full Width Card) ----
               _buildGameCard(
+                onTap: () {},
                 title: "Color Match",
                 description: "Stay sharp. Match the color fast.",
                 iconPath: "assets/colormatch.png",
@@ -105,15 +115,15 @@ class GamesScreen extends StatelessWidget {
     );
   }
 
-  // ---- Reusable Game Card ----
+// ---- Reusable Game Card ----
   Widget _buildGameCard({
     required String title,
     required String description,
     required String iconPath,
+    required VoidCallback onTap, // 👈 added required onTap
   }) {
     return Container(
       width: double.infinity,
-      
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: const Color(0xFFF3F6FF),
@@ -146,13 +156,13 @@ class GamesScreen extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           TextButton(
-            onPressed: () {},
+            onPressed: onTap, // 👈 now it's dynamic
             child: const Text(
               "Start Game",
               style: TextStyle(
                 color: AppColors.primaryColor,
                 fontWeight: FontWeight.w600,
-                fontSize: 15
+                fontSize: 15,
               ),
             ),
           ),

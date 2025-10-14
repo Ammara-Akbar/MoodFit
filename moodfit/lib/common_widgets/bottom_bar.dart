@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:moodfit/screens/daily_challenges_screen.dart';
-import 'package:moodfit/screens/games_screen.dart';
+import 'package:moodfit/screens/game/games_screen.dart';
 import 'package:moodfit/screens/setting/setting_screen.dart';
+import 'package:moodfit/screens/dashboard_screen.dart';
 import 'package:moodfit/utils/colors.dart';
 
-// Import your actual screens here
-import 'package:moodfit/screens/dashboard_screen.dart';
-
 class MyBottomBar extends StatefulWidget {
-  const MyBottomBar({super.key});
+  final int initialIndex; // 👈 allows you to pass custom starting tab
+
+  const MyBottomBar({super.key, this.initialIndex = 0});
 
   @override
   State<MyBottomBar> createState() => _MyBottomBarState();
 }
 
 class _MyBottomBarState extends State<MyBottomBar> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
   final Color selectedColor = AppColors.primaryGreenColor;
 
@@ -33,13 +33,18 @@ class _MyBottomBarState extends State<MyBottomBar> {
     "Settings",
   ];
 
-  // 👇 Add your actual screens here
   final List<Widget> screens = const [
     DashboardScreen(),
-   GamesScreen(),
+    GamesScreen(),
     DailyChallengesScreen(),
-    SettingsScreen()
+    SettingsScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex; // 👈 use the passed initial index
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -51,8 +56,6 @@ class _MyBottomBarState extends State<MyBottomBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
-      // 👇 Load selected screen dynamically
       body: screens[_selectedIndex],
 
       bottomNavigationBar: Container(
