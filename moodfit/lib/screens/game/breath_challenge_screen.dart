@@ -94,28 +94,39 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(Icons.arrow_back_ios, size: 18, color: Colors.black)),
-                    RichText(
-                      text: const TextSpan(
-                        text: "Mood",
-                        style: TextStyle(
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22),
-                        children: [
-                          TextSpan(
-                            text: "Fit",
+                  Row(
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        const MyBottomBar(initialIndex: 1)),
+                              );
+                            },
+                            child: Icon(Icons.arrow_back_ios,
+                                size: 18, color: Colors.black)),
+                                SizedBox(width: 8,),
+                        RichText(
+                          text: const TextSpan(
+                            text: "Mood",
                             style: TextStyle(
-                                color: AppColors.primaryColor2,
+                                color: AppColors.primaryColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 22),
+                            children: [
+                              TextSpan(
+                                text: "Fit",
+                                style: TextStyle(
+                                    color: AppColors.primaryColor2,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 22),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     const CircleAvatar(
                       radius: 18,
