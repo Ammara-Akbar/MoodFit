@@ -4,38 +4,46 @@ import 'package:flutter/material.dart';
 import 'package:moodfit/common_widgets/bottom_bar.dart';
 import 'package:moodfit/utils/colors.dart';
 
-class TapToFocusScreen extends StatefulWidget {
-  const TapToFocusScreen({super.key});
+class ColorMatchScreen extends StatefulWidget {
+  const ColorMatchScreen({super.key});
 
   @override
-  State<TapToFocusScreen> createState() => _TapToFocusScreenState();
+  State<ColorMatchScreen> createState() => _ColorMatchScreenState();
 }
 
-class _TapToFocusScreenState extends State<TapToFocusScreen> {
-  int stage = 0; // 0=start, 1=inProgress, 2=feedback, 3=result
+class _ColorMatchScreenState extends State<ColorMatchScreen> {
+  int stage = 0; // 0 = start, 1 = playing, 2 = result
   int seconds = 0;
-  int score = 0;
-  int total = 20;
+  int correct = 0;
+  int wrong = 0;
   Timer? timer;
   bool isRunning = false;
+  Color? targetColor;
+  List<Color> colorGrid = [];
+  final List<Color> colorPalette = [
+    Colors.red,
+    Colors.blue,
+    Colors.yellow,
+    Colors.green,
+    Colors.purple,
+    Colors.orange,
+    Colors.pink,
+    Colors.teal,
+  ];
 
-  List<Offset> bubbles = [];
-
-  void _generateBubbles() {
+  void _generateGrid() {
     final rand = Random();
-    bubbles = List.generate(8, (index) {
-      double x = rand.nextDouble() * 280;
-      double y = rand.nextDouble() * 280;
-      return Offset(x, y);
-    });
+    colorGrid = List.generate(25, (index) => colorPalette[rand.nextInt(colorPalette.length)]);
+    targetColor = colorPalette[rand.nextInt(colorPalette.length)];
   }
 
   void _startGame() {
     setState(() {
       stage = 1;
-      score = 0;
       seconds = 0;
-      _generateBubbles();
+      correct = 0;
+      wrong = 0;
+      _generateGrid();
       isRunning = true;
     });
 
@@ -61,7 +69,7 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
   void _finishGame() {
     timer?.cancel();
     setState(() {
-      stage = 3;
+      stage = 2;
       isRunning = false;
     });
   }
@@ -84,9 +92,7 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
       onWillPop: () async {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => const MyBottomBar(initialIndex: 1),
-          ),
+          MaterialPageRoute(builder: (_) => const MyBottomBar(initialIndex: 1)),
         );
         return false;
       },
@@ -98,27 +104,21 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header Row
+                // Header
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                  
-                      GestureDetector(
-                        onTap: () {
-                           Navigator.pushReplacement(
+                   
+                       GestureDetector(
+                        onTap: (){
+                          Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const MyBottomBar(initialIndex: 1)),
+                          MaterialPageRoute(builder: (_) => const MyBottomBar(initialIndex: 1)),
                         );
                         },
-                        child: Icon(Icons.arrow_back_ios,
-                            size: 18, color: Colors.black),
-                      ),
-                      
-                    
-                    RichText(
+                        child: Icon(Icons.arrow_back_ios, size: 18, color: Colors.black)),
                      
+                    RichText(
                       text: const TextSpan(
                         text: "Mood",
                         style: TextStyle(
@@ -145,32 +145,25 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
                 const SizedBox(height: 20),
 
                 const Text(
-                  "Tap to Focus",
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black),
+                  "Color Match",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black),
                 ),
                 const SizedBox(height: 6),
                 const Text(
-                  "Tap the bubbles before the timer runs out. Stay calm and focused — each tap adds a point!",
-                  style: TextStyle(
-                      fontSize: 14, color: Colors.black54, height: 1.4),
+                  "Match the shown color by tapping on tiles of the same color before time runs out!",
+                  style: TextStyle(fontSize: 14, color: Colors.black54, height: 1.4),
                 ),
                 const SizedBox(height: 25),
 
-                // --- Game Body ---
-                Expanded(
-                  child: _buildBody(),
-                ),
+                // --- Body Section ---
+                Expanded(child: _buildBody()),
 
                 const SizedBox(height: 15),
 
-                // --- Timer Section ---
-                if (stage < 3)
+                // Timer
+                if (stage != 2)
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 13),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF3F6FF),
                       borderRadius: BorderRadius.circular(8),
@@ -179,18 +172,12 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text("Timer",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black)),
+                            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black)),
                         Row(
                           children: [
-                            Text(
-                              timeDisplay,
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black),
-                            ),
+                            Text(timeDisplay,
+                                style: const TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black)),
                             const SizedBox(width: 6),
                             Icon(
                               isRunning
@@ -215,7 +202,7 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
     );
   }
 
-  // ---- Body ----
+  // ---- Game Body ----
   Widget _buildBody() {
     if (stage == 0) {
       return Container(
@@ -225,65 +212,87 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
           color: const Color(0xFFF3F6FF),
           borderRadius: BorderRadius.circular(16),
         ),
-        child: Image.asset(
-          "assets/baloonsgame.png",
-          height: 320,
-          fit: BoxFit.contain,
-        ),
+        child: Image.asset("assets/game2.png", height: 300, fit: BoxFit.contain),
       );
     } else if (stage == 1) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF3F6FF),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: bubbles.map((pos) {
-            return Positioned(
-              left: pos.dx,
-              top: pos.dy,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    score++;
-                    _generateBubbles();
-                  });
-                },
-                child: Container(
-                  height: 40 + Random().nextInt(30).toDouble(),
-                  width: 40 + Random().nextInt(30).toDouble(),
-                  decoration: const BoxDecoration(
-                    color: AppColors.primaryColor2,
-                    shape: BoxShape.circle,
+      return Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF3F6FF),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              children: [
+                const Text(
+                  "Match This Color",
+                  style: TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  height: 40,
+                  width: 40,
+                  decoration: BoxDecoration(
+                    color: targetColor,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.black12),
                   ),
                 ),
-              ),
-            );
-          }).toList(),
-        ),
+                const SizedBox(height: 16),
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5, crossAxisSpacing: 4, mainAxisSpacing: 4),
+                  itemCount: colorGrid.length,
+                  itemBuilder: (context, index) {
+                    final color = colorGrid[index];
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (color == targetColor) {
+                            correct++;
+                          } else {
+                            wrong++;
+                          }
+                          _generateGrid();
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: color,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
       );
-    } else if (stage == 3) {
-      double anxietyScore = (total - score) / total * 100;
+    } else {
+      // --- Results ---
       String feedback;
       Color color;
-      if (score >= 16) {
-        feedback = "Low Anxiety Level";
+      if (correct >= 12) {
+        feedback = "Excellent Accuracy";
         color = AppColors.primaryGreenColor;
-      } else if (score >= 10) {
-        feedback = "Moderate Anxiety";
+      } else if (correct >= 8) {
+        feedback = "Balanced Performance";
         color = Colors.orange;
       } else {
-        feedback = "High Anxiety";
+        feedback = "Needs Practice";
         color = Colors.red;
       }
 
       return Column(
         children: [
           Container(
-            height: 180,
             width: double.infinity,
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
@@ -291,31 +300,23 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "Popup",
-                  style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black),
-                ),
-                SizedBox(height: 12,),
-                Text(
-                  "$score / $total",
-                  style: const TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primaryColor),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  feedback,
-                  style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black54),
-                ),
+                const Text("Popup",
+                    style: TextStyle(fontSize: 16, color: Colors.black54,fontWeight: FontWeight.w600,)),
+                const SizedBox(height: 10),
+                Text("Correct: $correct",
+                    style: const TextStyle(
+                        fontSize: 42,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryColor)),
+                Text("Wrong: $wrong",
+                     style: const TextStyle(
+                        fontSize: 42,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryColor)),
+                        SizedBox(height: 12,),
+                         const Text("Anxiety Level: Moderate",
+                    style: TextStyle(fontSize: 14, color: Colors.black54)),
               ],
             ),
           ),
@@ -327,19 +328,14 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
                     fontWeight: FontWeight.w600, color: Colors.black)),
           ),
           const SizedBox(height: 8),
-          const Text(
-            "Great focus and reaction speed! You’re mastering calm control.",
-            style: TextStyle(fontSize: 13, color: Colors.black54),
-          ),
-          const SizedBox(height: 15),
           Align(
             alignment: Alignment.topLeft,
             child: Text(
               feedback,
-              style: const TextStyle(fontSize: 13, color: Colors.black87),
+              style: const TextStyle(fontSize: 13, color: Colors.black54),
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           Container(
             height: 6,
             width: double.infinity,
@@ -349,7 +345,7 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
             ),
             child: FractionallySizedBox(
               alignment: Alignment.centerLeft,
-              widthFactor: score / total,
+              widthFactor: correct / 20,
               child: Container(
                 decoration: BoxDecoration(
                   color: color,
@@ -361,7 +357,6 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
         ],
       );
     }
-    return const SizedBox();
   }
 
   // ---- Buttons ----
@@ -372,11 +367,9 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primaryColor,
           minimumSize: const Size(double.infinity, 50),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         ),
-        child: const Text("Start",
-            style: TextStyle(color: Colors.white, fontSize: 16)),
+        child: const Text("Start", style: TextStyle(color: Colors.white, fontSize: 16)),
       );
     } else if (stage == 1) {
       return Row(
@@ -386,15 +379,13 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
               onPressed: isRunning ? _pause : _resume,
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: AppColors.primaryColor2),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
               child: Text(
                 isRunning ? "Pause" : "Resume",
                 style: const TextStyle(
-                    color: AppColors.primaryColor2,
-                    fontWeight: FontWeight.w600),
+                    color: AppColors.primaryColor2, fontWeight: FontWeight.w600),
               ),
             ),
           ),
@@ -404,12 +395,10 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
               onPressed: _finishGame,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
-              child:
-                  const Text("Finish", style: TextStyle(color: Colors.white)),
+              child: const Text("Finish", style: TextStyle(color: Colors.white)),
             ),
           ),
         ],
@@ -422,22 +411,19 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
               onPressed: () {
                 setState(() {
                   stage = 0;
-                  score = 0;
+                  correct = 0;
+                  wrong = 0;
                   seconds = 0;
                 });
               },
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: AppColors.primaryColor2),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
-              child: const Text(
-                "Play Again",
-                style: TextStyle(
-                    color: AppColors.primaryColor2,
-                    fontWeight: FontWeight.w600),
-              ),
+              child: const Text("Play Again",
+                  style: TextStyle(
+                      color: AppColors.primaryColor2, fontWeight: FontWeight.w600)),
             ),
           ),
           const SizedBox(width: 12),
@@ -446,8 +432,7 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
               child: const Text("Go to Meme Mode",

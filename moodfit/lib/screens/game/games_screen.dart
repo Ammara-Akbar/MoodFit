@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moodfit/screens/game/breath_challenge_screen.dart';
+import 'package:moodfit/screens/game/color_match_screen.dart';
 import 'package:moodfit/screens/game/tap_to_focus_screen.dart';
 import 'package:moodfit/utils/colors.dart';
 
@@ -108,7 +109,13 @@ class GamesScreen extends StatelessWidget {
 
               // ---- Custom Row 2 (Full Width Card) ----
               _buildGameCard(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => ColorMatchScreen()),
+                        );
+                },
                 title: "Color Match",
                 description: "Stay sharp. Match the color fast.",
                 iconPath: "assets/colormatch.png",
