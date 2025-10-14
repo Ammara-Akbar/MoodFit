@@ -94,7 +94,11 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Icon(Icons.arrow_back_ios, size: 18, color: Colors.black),
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.pop(context);
+                      },
+                      child: const Icon(Icons.arrow_back_ios, size: 18, color: Colors.black)),
                     RichText(
                       text: const TextSpan(
                         text: "Mood",
@@ -216,6 +220,7 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
             ),
             const SizedBox(height: 10),
             if (stage == 2)
+            
               const Text("You are doing great!",
                   style: TextStyle(color: Colors.black54)),
             const SizedBox(height: 20),

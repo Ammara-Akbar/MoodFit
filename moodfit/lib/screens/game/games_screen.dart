@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moodfit/screens/game/breath_challenge_screen.dart';
+import 'package:moodfit/screens/game/tap_to_focus_screen.dart';
 import 'package:moodfit/utils/colors.dart';
 
 class GamesScreen extends StatelessWidget {
@@ -88,7 +89,13 @@ class GamesScreen extends StatelessWidget {
                   const SizedBox(width: 14),
                   Expanded(
                     child: _buildGameCard(
-                      onTap: () {},
+                      onTap: () {
+                         Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => TapToFocusScreen()),
+                        );
+                      },
                       title: "Tap to Focus",
                       description: "Pop the bubbles before time runs out.",
                       iconPath: "assets/tapfocus.png",
