@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moodfit/screens/web/web_login_screen.dart';
 import 'package:moodfit/splash_screen.dart';
 
 void main() {
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
      
-      home: SplashScreen(),
+      home: WebLoginScreen()
+      //  SplashScreen(),
     );
   }
 }

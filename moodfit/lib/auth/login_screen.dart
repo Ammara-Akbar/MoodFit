@@ -294,7 +294,7 @@ class _LoginScreenState extends State<LoginScreen> {
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: const BorderSide(
-          color: Color(0xFF4F8EF7),
+          color: AppColors.primaryColor,
           width: 1.6,
         ),
       ),

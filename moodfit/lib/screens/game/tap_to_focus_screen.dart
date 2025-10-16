@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:moodfit/common_widgets/bottom_bar.dart';
 import 'package:moodfit/utils/colors.dart';
 
+import '../mem_mode_screen.dart';
+
 class TapToFocusScreen extends StatefulWidget {
   const TapToFocusScreen({super.key});
 
@@ -135,7 +137,7 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
                           ),
                         ),
                       ],
-                    ),
+                    ),    
                     const CircleAvatar(
                       radius: 18,
                       backgroundImage: AssetImage("assets/image1.png"),
@@ -443,7 +445,12 @@ class _TapToFocusScreenState extends State<TapToFocusScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                 Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => MemeModeScreen()),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
                 shape: RoundedRectangleBorder(

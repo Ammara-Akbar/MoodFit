@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:moodfit/common_widgets/bottom_bar.dart';
+import 'package:moodfit/screens/mem_mode_screen.dart';
 import 'package:moodfit/utils/colors.dart';
 
 class ColorMatchScreen extends StatefulWidget {
@@ -464,7 +465,12 @@ class _ColorMatchScreenState extends State<ColorMatchScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                 Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => MemeModeScreen()),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
                 shape: RoundedRectangleBorder(

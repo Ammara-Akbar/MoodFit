@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:moodfit/common_widgets/bottom_bar.dart';
+import 'package:moodfit/screens/mem_mode_screen.dart';
 import 'package:moodfit/utils/colors.dart';
 
 class BreathChallengeScreen extends StatefulWidget {
@@ -71,17 +72,17 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
 
   @override
   Widget build(BuildContext context) {
-   return WillPopScope(
-    onWillPop: () async {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) =>  MyBottomBar(
-          initialIndex: 1,
-        
-        )),
-      );
-      return false; // prevents the default system pop
-    },
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyBottomBar(
+                    initialIndex: 1,
+                  )),
+        );
+        return false; // prevents the default system pop
+      },
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -94,7 +95,7 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                  Row(
+                    Row(
                       children: [
                         GestureDetector(
                             onTap: () {
@@ -107,7 +108,9 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
                             },
                             child: Icon(Icons.arrow_back_ios,
                                 size: 18, color: Colors.black)),
-                                SizedBox(width: 8,),
+                        SizedBox(
+                          width: 8,
+                        ),
                         RichText(
                           text: const TextSpan(
                             text: "Mood",
@@ -135,7 +138,7 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-      
+
                 const Text(
                   "Breath Challenge",
                   style: TextStyle(
@@ -146,18 +149,21 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
                 const SizedBox(height: 6),
                 const Text(
                   "Tap to breathe in. Tap again to breathe out. Match your rhythm with the animation to earn calm points.",
-                  style: TextStyle(fontSize: 14, color: Colors.black54, height: 1.4),
+                  style: TextStyle(
+                      fontSize: 14, color: Colors.black54, height: 1.4),
                 ),
                 const SizedBox(height: 25),
-      
+
                 // --- Body section ---
                 Center(child: _buildBody()),
-      SizedBox(height: 22,),
+                SizedBox(
+                  height: 22,
+                ),
                 // --- Timer Section ---
                 if (stage < 3)
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 13),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF3F6FF),
                       borderRadius: BorderRadius.circular(8),
@@ -167,7 +173,8 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
                       children: [
                         const Text("Timer",
                             style: TextStyle(
-                                fontWeight: FontWeight.w600, color: Colors.black)),
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black)),
                         Row(
                           children: [
                             Text(
@@ -179,20 +186,19 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
                               ),
                             ),
                             const SizedBox(width: 6),
-                           
-                              isRunning
-                                  ? Icon(Icons.pause_circle_filled,
-                                      color: AppColors.primaryColor, size: 35)
-                                  : Icon(Icons.play_circle_filled,
-                                      color: AppColors.primaryColor, size: 35)
+                            isRunning
+                                ? Icon(Icons.pause_circle_filled,
+                                    color: AppColors.primaryColor, size: 35)
+                                : Icon(Icons.play_circle_filled,
+                                    color: AppColors.primaryColor, size: 35)
                           ],
                         ),
                       ],
                     ),
                   ),
-      
+
                 const SizedBox(height: 25),
-      
+
                 // --- Buttons ---
                 _buildButtons(),
               ],
@@ -210,7 +216,9 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 25,),
+            SizedBox(
+              height: 25,
+            ),
             Image.asset("assets/baloons.png", height: 210),
           ],
         );
@@ -219,8 +227,9 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(height: 25,),
-
+            SizedBox(
+              height: 25,
+            ),
             Text(
               stage == 1 ? "Breathe Out" : "Breathe In",
               style: const TextStyle(
@@ -231,7 +240,6 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
             ),
             const SizedBox(height: 10),
             if (stage == 2)
-            
               const Text("You are doing great!",
                   style: TextStyle(color: Colors.black54)),
             const SizedBox(height: 20),
@@ -251,8 +259,9 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
               ),
               child: Column(
                 children: [
-            SizedBox(height: 25,),
-
+                  SizedBox(
+                    height: 25,
+                  ),
                   Image.asset("assets/image2.png", height: 150),
                   const SizedBox(height: 8),
                   const Text(
@@ -273,9 +282,11 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
             const SizedBox(height: 20),
             Align(
               alignment: Alignment.topLeft,
-              child: const Text("Feedback",
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600, color: Colors.black),),
+              child: const Text(
+                "Feedback",
+                style:
+                    TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
+              ),
             ),
             const SizedBox(height: 8),
             const Text(
@@ -284,14 +295,14 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
               style: TextStyle(fontSize: 13, color: Colors.black54),
             ),
             const SizedBox(height: 20),
-             Align(
+            Align(
               alignment: Alignment.topLeft,
-               child: const Text(
+              child: const Text(
                 "Great Progress",
                 textAlign: TextAlign.start,
                 style: TextStyle(fontSize: 13, color: Colors.black54),
-                           ),
-             ),
+              ),
+            ),
             const SizedBox(height: 10),
             Container(
               height: 6,
@@ -329,7 +340,8 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         ),
-        child: const Text("Start", style: TextStyle(color: Colors.white,fontSize: 16)),
+        child: const Text("Start",
+            style: TextStyle(color: Colors.white, fontSize: 16)),
       );
     } else if (stage == 1 || stage == 2) {
       return Row(
@@ -395,7 +407,12 @@ class _BreathChallengeScreenState extends State<BreathChallengeScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => MemeModeScreen()),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
                 shape: RoundedRectangleBorder(
