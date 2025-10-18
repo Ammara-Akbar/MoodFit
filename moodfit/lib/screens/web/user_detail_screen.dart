@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:moodfit/utils/colors.dart';
 
 class UserDetailScreen extends StatefulWidget {
   final Map<String, dynamic> user;
- final VoidCallback? onBack; // ✅ ADD THIS
+  final VoidCallback? onBack;
 
   const UserDetailScreen({
     super.key,
     required this.user,
-    this.onBack, // ✅ ADD THIS
+    this.onBack,
   });
 
   @override
@@ -22,93 +21,20 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final bool isDesktop = MediaQuery.of(context).size.width > 1024;
-    final bool isTablet =
-        MediaQuery.of(context).size.width > 768 && MediaQuery.of(context).size.width <= 1024;
+    final bool isTablet = MediaQuery.of(context).size.width > 768 && 
+                          MediaQuery.of(context).size.width <= 1024;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Row(
-        children: [
-        // if (isDesktop || isTablet) _buildSidebar(),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(isDesktop ? 32 : 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(context, isDesktop),
-                  const SizedBox(height: 30),
-                  _buildFilterRow(),
-                  const SizedBox(height: 30),
-                  ...List.generate(3, (i) => _buildDetailCard(i)),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// ✅ Sidebar
-  Widget _buildSidebar() {
-    return Container(
-      width: 250,
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 20),
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(isDesktop ? 32 : 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: RichText(
-              text: const TextSpan(
-                text: "Mood",
-                style: TextStyle(
-                  color: AppColors.primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 32,
-                ),
-                children: [
-                  TextSpan(
-                    text: "Fit",
-                    style: TextStyle(
-                      color: AppColors.primaryColor2,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 32,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          _buildHeader(context, isDesktop),
           const SizedBox(height: 30),
-          _sidebarItem("Users", true),
-          _sidebarItem("Daily Challenge", false),
-          _sidebarItem("Avatar Management", false),
-          _sidebarItem("Game Analytics", false),
-          _sidebarItem("Meme Mode", false),
+          _buildFilterRow(),
+          const SizedBox(height: 30),
+          ...List.generate(3, (i) => _buildDetailCard(i)),
         ],
-      ),
-    );
-  }
-
-  Widget _sidebarItem(String title, bool selected) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      decoration: BoxDecoration(
-        color: selected ? AppColors.primaryColor : Colors.transparent,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: ListTile(
-        dense: true,
-        title: Text(
-          title,
-          style: TextStyle(
-            color: selected ? Colors.white : Colors.black,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
       ),
     );
   }
@@ -121,9 +47,10 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         Row(
           children: [
             IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.black87),
-              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back, color: Colors.black87, size: 18),
+              onPressed: widget.onBack ?? () => Navigator.pop(context),
             ),
+            const SizedBox(width: 4),
             Text(
               "${widget.user["name"]} Details",
               style: const TextStyle(
@@ -198,15 +125,11 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                 ],
               ),
               child: DropdownButtonHideUnderline(
-            
                 child: DropdownButton<String>(
-                
                   value: selectedFilter,
-              
                   icon: const Icon(Icons.keyboard_arrow_down),
                   items: filters
-                      .map((f) =>
-                          DropdownMenuItem(value: f, child: Text(f)))
+                      .map((f) => DropdownMenuItem(value: f, child: Text(f)))
                       .toList(),
                   onChanged: (value) {
                     setState(() {
@@ -298,7 +221,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                       children: [
                         SizedBox(
                           width: double.infinity,
-                          child: _buildLeftColumn()),
+                          child: _buildLeftColumn(),
+                        ),
                         const SizedBox(height: 16),
                         _buildMiddleColumn(),
                         const SizedBox(height: 16),

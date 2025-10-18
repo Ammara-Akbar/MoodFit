@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:moodfit/utils/colors.dart';
 
 class DailyChallengeMainSection extends StatefulWidget {
-  final VoidCallback onAddNew; // 👈 add callback
+  final VoidCallback onAddNew;
+  final VoidCallback? onViewDetails; // ✅ new callback
 
-  const DailyChallengeMainSection({super.key, required this.onAddNew});
+  const DailyChallengeMainSection({
+    super.key,
+    required this.onAddNew,
+    this.onViewDetails,
+  });
+
   @override
   State<DailyChallengeMainSection> createState() =>
       _DailyChallengeMainSectionState();
@@ -182,12 +188,17 @@ class _DailyChallengeMainSectionState extends State<DailyChallengeMainSection> {
     );
   }
 
+  // ✅ Updated Action Cell — Added View functionality
   Widget _actionCell(Map<String, dynamic> challenge) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: PopupMenuButton<String>(
         icon: const Icon(Icons.more_vert, size: 18),
-        onSelected: (value) {},
+        onSelected: (value) {
+          if (value == "view") {
+            widget.onViewDetails?.call(); // ✅ Trigger view details callback
+          }
+        },
         itemBuilder: (context) => const [
           PopupMenuItem(value: "view", child: Text("View")),
           PopupMenuItem(value: "edit", child: Text("Edit")),
@@ -277,7 +288,7 @@ class _DailyChallengeMainSectionState extends State<DailyChallengeMainSection> {
                       SizedBox(
                         width: isMobile ? 190 : 200,
                         child: ElevatedButton.icon(
-                          onPressed: widget.onAddNew, 
+                          onPressed: widget.onAddNew,
                           icon: const Icon(Icons.add,
                               size: 18, color: Colors.white),
                           label: const Text(
@@ -355,7 +366,7 @@ class _DailyChallengeMainSectionState extends State<DailyChallengeMainSection> {
 
   Widget _addChallengeButton() {
     return ElevatedButton.icon(
-       onPressed: widget.onAddNew, 
+      onPressed: widget.onAddNew,
       icon: const Icon(Icons.add, size: 18, color: Colors.white),
       label: const Text(
         "Add New Challenge",
