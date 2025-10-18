@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moodfit/screens/web/add_avatar_screen.dart';
 import 'package:moodfit/screens/web/avatar_unlock_managment_screen.dart';
 import 'package:moodfit/screens/web/daily_challenge_screen.dart';
 import 'package:moodfit/screens/web/user_detail_screen.dart';
@@ -105,6 +106,7 @@ class _WebUserScreenState extends State<WebUserScreen> {
     },
   ];
   bool showUserDetail = false;
+  bool showAddAvatar = false;
 
   bool showChallengeDetails = false;
 
@@ -113,15 +115,21 @@ class _WebUserScreenState extends State<WebUserScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final bool isDesktop = screenWidth > 1024;
     final bool isTablet = screenWidth > 768 && screenWidth <= 1024;
-final bool isInChallengeSubScreen =
+    ////////
+    final bool isInChallengeSubScreen =
     selectedMenu == MenuSection.dailyChallenge &&
-    (showAddChallenge || showChallengeDetails);
+        (showAddChallenge || showChallengeDetails);
 
 final bool isInUserSubScreen =
     selectedMenu == MenuSection.users && showUserDetail;
 
-// 👇 combine both
-final bool hideHeader = isInChallengeSubScreen || isInUserSubScreen;
+final bool isInAvatarSubScreen =
+    selectedMenu == MenuSection.avatarManagement && showAddAvatar;
+
+// 👇 combine all three
+final bool hideHeader =
+    isInChallengeSubScreen || isInUserSubScreen || isInAvatarSubScreen;
+
 
     return Scaffold(
       key: _scaffoldKey,
@@ -138,8 +146,9 @@ final bool hideHeader = isInChallengeSubScreen || isInUserSubScreen;
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ✅ Hide header only when Add Challenge screen is open
-               !hideHeader ? _buildHeader(isDesktop) : const SizedBox.shrink(),
-
+                    !hideHeader
+                        ? _buildHeader(isDesktop)
+                        : const SizedBox.shrink(),
 
                     const SizedBox(height: 24),
                     _buildMainContent(isDesktop),
@@ -198,9 +207,20 @@ final bool hideHeader = isInChallengeSubScreen || isInUserSubScreen;
     // ✅ Other Sections
     switch (selectedMenu) {
       case MenuSection.avatarManagement:
-        return AvatarManagementMainSection(onAddNew: () {
-         
-        });
+        if (showAddAvatar) {
+          return AddNewAvatarItemScreen(
+            onBack: () {
+              setState(() => showAddAvatar = false);
+            },
+          );
+        }
+
+        return AvatarManagementMainSection(
+          onAddNew: () {
+            setState(() => showAddAvatar = true);
+          },
+        );
+
       case MenuSection.gameAnalytics:
         return const Center(child: Text("Game Analytics Screen Coming Soon"));
       case MenuSection.memeMode:
