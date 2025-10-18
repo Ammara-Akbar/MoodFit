@@ -1,189 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:moodfit/utils/colors.dart';
 
-class DailyChallengeScreen extends StatefulWidget {
-  const DailyChallengeScreen({super.key});
+class DailyChallengeMainSection extends StatefulWidget {
+  const DailyChallengeMainSection({super.key});
 
   @override
-  State<DailyChallengeScreen> createState() => _DailyChallengeScreenState();
+  State<DailyChallengeMainSection> createState() =>
+      _DailyChallengeMainSectionState();
 }
 
-class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
-  int selectedIndex = 1;
-
+class _DailyChallengeMainSectionState extends State<DailyChallengeMainSection> {
   final List<Map<String, dynamic>> challenges = List.generate(8, (index) {
+    final statuses = ["Active", "Upcoming", "Expired"];
     return {
       "name": "Take 5 Deep Breaths",
       "reward": "+10 pts",
       "completionRate": "72%",
       "usersCompleted": "5,489",
-      "status": index == 0 || index == 2 || index == 3
-          ? "Active"
-          : index == 5
-              ? "Expired"
-              : "Upcoming",
+      "status": statuses[index % 3],
     };
   });
 
   @override
   Widget build(BuildContext context) {
-    final bool isDesktop = MediaQuery.of(context).size.width > 950;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Row(
-        children: [
-          if (isDesktop) _buildSidebar(),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildHeader(isDesktop),
-                    const SizedBox(height: 24),
-                    _buildChallengeList(isDesktop),
-                    const SizedBox(height: 24),
-                    _buildPagination(),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isDesktop = screenWidth > 1024;
 
-  /// 🔹 Sidebar
-  Widget _buildSidebar() {
-    final sidebarItems = [
-      "Users",
-      "Daily Challenge",
-      "Avatar Management",
-      "Game Analytics",
-      "Meme Mode"
-    ];
-
-    return Container(
-      width: 240,
-      color: Colors.white,
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(isDesktop ? 24 : 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(24),
-            child: Text(
-              "MoodFit",
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF4F46E5),
-              ),
-            ),
-          ),
-          ...List.generate(sidebarItems.length, (index) {
-            final isSelected = selectedIndex == index;
-            return InkWell(
-              onTap: () => setState(() => selectedIndex = index),
-              child: Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? const Color(0xFFEFF2FF)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      sidebarItems[index],
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: isSelected
-                            ? AppColors.primaryColor
-                            : Colors.black87,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }),
+          _buildUserTable(context, isDesktop),
         ],
       ),
     );
   }
 
-  /// 🔹 Header with search and button
-  Widget _buildHeader(bool isDesktop) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
-          "Daily Challenge",
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF111827),
-          ),
-        ),
-        Row(
-          children: [
-            SizedBox(
-              width: isDesktop ? 260 : 180,
-              height: 38,
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Search",
-                  hintStyle:
-                      const TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),
-                  prefixIcon: const Icon(Icons.search,
-                      size: 18, color: Color(0xFF9CA3AF)),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        const BorderSide(color: Color(0xFFD1D5DB), width: 1),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-              ),
-              onPressed: () {},
-              child: const Text(
-                "Add New Challenge",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        )
-      ],
-    );
-  }
+  Widget _buildUserTable(BuildContext context, bool isDesktop) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isTablet = screenWidth > 768 && screenWidth <= 1024;
 
-  /// 🔹 Challenge Table
-  Widget _buildChallengeList(bool isDesktop) {
     return Container(
-      width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: const Color(0xFFE5E7EB)),
@@ -191,187 +49,340 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
       ),
       child: Column(
         children: [
-          // Header Row
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 18),
-            color: const Color(0xFFF9FAFB),
-            child: Row(
-              children: const [
-                _TableHeader(title: "Challenge Name", flex: 2),
-                _TableHeader(title: "Reward"),
-                _TableHeader(title: "Completion Rate"),
-                _TableHeader(title: "Users Completed"),
-                _TableHeader(title: "Status"),
-                _TableHeader(title: "Action"),
+          _buildHeader(isDesktop, isTablet),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Table(
+              border: TableBorder.all(
+                color: const Color(0xFFE5E7EB),
+                width: 0.8,
+              ),
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              columnWidths: const {
+                0: FixedColumnWidth(240),
+                1: FixedColumnWidth(150),
+                2: FixedColumnWidth(160),
+                3: FixedColumnWidth(160),
+                4: FixedColumnWidth(140),
+                5: FixedColumnWidth(90),
+              },
+              children: [
+                _tableRowHeader(),
+                ...challenges.map((c) => _tableRow(c)).toList(),
               ],
             ),
           ),
-          const Divider(height: 1, color: Color(0xFFE5E7EB)),
-          // Data Rows
-          ...challenges.map((challenge) => Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 14, horizontal: 18),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            challenge["name"],
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 14),
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            challenge["reward"],
-                            style: const TextStyle(
-                                color: Color(0xFF374151), fontSize: 14),
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            challenge["completionRate"],
-                            style: const TextStyle(
-                                color: Color(0xFF374151), fontSize: 14),
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            challenge["usersCompleted"],
-                            style: const TextStyle(
-                                color: Color(0xFF374151), fontSize: 14),
-                          ),
-                        ),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: _statusBadge(challenge["status"]),
-                          ),
-                        ),
-                        const Expanded(
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Icon(Icons.more_vert,
-                                color: Color(0xFF6B7280)),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(height: 1, color: Color(0xFFE5E7EB)),
-                ],
-              )),
+          _pagination(),
         ],
       ),
     );
   }
 
-  /// 🔹 Status Badge
-  Widget _statusBadge(String status) {
+  TableRow _tableRowHeader() {
+    return TableRow(
+      decoration: const BoxDecoration(
+        color: Color(0xFFF9FAFB),
+      ),
+      children: [
+        _headerCell("Challenge Name"),
+        _headerCell("Reward"),
+        _headerCell("Completion Rate"),
+        _headerCell("Users Completed"),
+        _headerCell("Status"),
+        _headerCell("Action"),
+      ],
+    );
+  }
+
+  TableRow _tableRow(Map<String, dynamic> challenge) {
+    return TableRow(
+      children: [
+        _dataCell(challenge["name"]),
+        _dataCell(challenge["reward"]),
+        _dataCell(challenge["completionRate"]),
+        _dataCell(challenge["usersCompleted"]),
+        _statusCell(challenge["status"]),
+        _actionCell(challenge),
+      ],
+    );
+  }
+
+  Widget _headerCell(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF6B7280),
+        ),
+      ),
+    );
+  }
+
+  Widget _dataCell(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 13, color: Colors.black54),
+      ),
+    );
+  }
+
+  Widget _statusCell(String status) {
     Color bg;
+    Color border;
     Color text;
+
     switch (status) {
       case "Active":
         bg = const Color(0xFFDCFCE7);
+        border = const Color(0xFF86EFAC);
         text = const Color(0xFF166534);
         break;
       case "Upcoming":
         bg = const Color(0xFFE0F2FE);
-        text = const Color(0xFF075985);
+        border = const Color(0xFF60A5FA);
+        text = const Color(0xFF1E40AF);
         break;
       case "Expired":
         bg = const Color(0xFFF3F4F6);
+        border = const Color(0xFFD1D5DB);
         text = const Color(0xFF6B7280);
         break;
       default:
-        bg = Colors.grey.shade100;
-        text = Colors.grey.shade800;
+        bg = Colors.white;
+        border = const Color(0xFFE5E7EB);
+        text = const Color(0xFF111827);
     }
 
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: bg,
+          border: Border.all(color: border),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Center(
+          child: Text(
+            status,
+            style: TextStyle(
+              color: text,
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _actionCell(Map<String, dynamic> challenge) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: PopupMenuButton<String>(
+        icon: const Icon(Icons.more_vert, size: 18),
+        onSelected: (value) {},
+        itemBuilder: (context) => const [
+          PopupMenuItem(value: "view", child: Text("View")),
+          PopupMenuItem(value: "edit", child: Text("Edit")),
+          PopupMenuItem(value: "delete", child: Text("Delete")),
+        ],
+      ),
+    );
+  }
+
+  Widget _pagination() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            "Page 1 of 10",
+            style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
+          ),
+          Row(
+            children: [
+              _pageButton("Previous"),
+              const SizedBox(width: 12),
+              _pageButton("Next"),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(bool isDesktop, bool isTablet) {
+    bool isMobile = MediaQuery.of(context).size.width < 768;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
       ),
-      child: Text(
-        status,
-        style: TextStyle(
-            color: text, fontSize: 12, fontWeight: FontWeight.w500),
+      child: isMobile || isTablet
+          ? Align(
+              alignment: Alignment.topLeft,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Challenges List",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF111827),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 190,
+                        height: 40,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: "Search",
+                            hintStyle: TextStyle(color: Colors.grey.shade300),
+                            prefixIcon:
+                                Icon(Icons.search, color: Colors.grey.shade500),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 10),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade200),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide:
+                                  BorderSide(color: AppColors.primaryColor),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade200),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      SizedBox(
+                        width: isMobile ? 190 : 200,
+                        child: ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(Icons.add,
+                              size: 18, color: Colors.white),
+                          label: const Text(
+                            "Add New Challenge",
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryColor,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 18, vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(22),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Challenges List",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF111827),
+                  ),
+                ),
+                Row(
+                  children: [
+                    _searchField(),
+                    const SizedBox(width: 12),
+                    _addChallengeButton(),
+                  ],
+                ),
+              ],
+            ),
+    );
+  }
+
+  Widget _searchField() {
+    return SizedBox(
+      width: 260,
+      height: 40,
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: "Search",
+          hintStyle: TextStyle(color: Colors.grey.shade300),
+          prefixIcon: Icon(Icons.search, color: Colors.grey.shade500),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade200),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: AppColors.primaryColor),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade200),
+          ),
+        ),
       ),
     );
   }
 
-  /// 🔹 Pagination
-  Widget _buildPagination() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
-          "Page 1 of 10",
-          style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
+  Widget _addChallengeButton() {
+    return ElevatedButton.icon(
+      onPressed: () {},
+      icon: const Icon(Icons.add, size: 18, color: Colors.white),
+      label: const Text(
+        "Add New Challenge",
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primaryColor,
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(22),
         ),
-        Row(
-          children: [
-            OutlinedButton(
-              onPressed: () {},
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Color(0xFFD1D5DB)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-              ),
-              child: const Text(
-                "Previous",
-                style: TextStyle(
-                    color: Color(0xFF374151),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500),
-              ),
-            ),
-            const SizedBox(width: 8),
-            OutlinedButton(
-              onPressed: () {},
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Color(0xFFD1D5DB)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-              ),
-              child: const Text(
-                "Next",
-                style: TextStyle(
-                    color: Color(0xFF374151),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500),
-              ),
-            ),
-          ],
-        ),
-      ],
+      ),
     );
   }
-}
 
-/// 🔹 Table Header Widget
-class _TableHeader extends StatelessWidget {
-  final String title;
-  final int flex;
-  const _TableHeader({required this.title, this.flex = 1});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: flex,
+  Widget _pageButton(String label) {
+    return OutlinedButton(
+      onPressed: () {},
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(color: Colors.grey.shade300),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      ),
       child: Text(
-        title,
+        label,
         style: const TextStyle(
-          color: Color(0xFF6B7280),
-          fontSize: 12,
+          color: Colors.black87,
+          fontSize: 14,
           fontWeight: FontWeight.w600,
         ),
       ),

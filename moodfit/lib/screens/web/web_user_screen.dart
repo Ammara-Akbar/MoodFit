@@ -1,5 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:moodfit/screens/web/daily_challenge_screen.dart';
+import 'package:moodfit/screens/web/user_detail_screen.dart';
 import 'package:moodfit/utils/colors.dart';
+enum MenuSection {
+  users,
+  dailyChallenge,
+  avatarManagement,
+  gameAnalytics,
+  memeMode,
+}
+String _getPageTitle(MenuSection section) {
+  switch (section) {
+    case MenuSection.users:
+      return "Users";
+    case MenuSection.dailyChallenge:
+      return "Daily Challenges";
+    case MenuSection.avatarManagement:
+      return "Avatar Management";
+    case MenuSection.gameAnalytics:
+      return "Game Analytics";
+    case MenuSection.memeMode:
+      return "Meme Mode";
+    default:
+      return "Dashboard";
+  }
+}
+
 
 class WebUserScreen extends StatefulWidget {
   const WebUserScreen({super.key});
@@ -10,7 +36,10 @@ class WebUserScreen extends StatefulWidget {
 
 class _WebUserScreenState extends State<WebUserScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool showDetail = false;
+  MenuSection selectedMenu = MenuSection.users; // default screen
 
+  Map<String, dynamic>? selectedUser;
   final List<Map<String, dynamic>> users = [
     {
       "name": "Ayesha Khan",
@@ -92,7 +121,8 @@ class _WebUserScreenState extends State<WebUserScreen> {
                   children: [
                     _buildHeader(isDesktop),
                     const SizedBox(height: 24),
-                    _buildUserTable(context, isDesktop),
+                    _buildMainContent(isDesktop),
+
                   ],
                 ),
               ),
@@ -102,6 +132,35 @@ class _WebUserScreenState extends State<WebUserScreen> {
       ),
     );
   }
+Widget _buildMainContent(bool isDesktop) {
+  if (showDetail && selectedUser != null) {
+    return UserDetailScreen(
+      user: selectedUser!,
+      onBack: () {
+        setState(() {
+          showDetail = false;
+          selectedUser = null;
+        });
+      },
+    );
+  }
+
+  switch (selectedMenu) {
+    case MenuSection.users:
+      return _buildUserTable(context, isDesktop);
+    case MenuSection.dailyChallenge:
+      return const DailyChallengeMainSection();
+    case MenuSection.avatarManagement:
+      return const Center(child: Text("Avatar Management Screen Coming Soon"));
+    case MenuSection.gameAnalytics:
+      return const Center(child: Text("Game Analytics Screen Coming Soon"));
+    case MenuSection.memeMode:
+      return const Center(child: Text("Meme Mode Screen Coming Soon"));
+    default:
+      return const SizedBox();
+  }
+}
+
 
   Widget _buildSidebar() {
     return Container(
@@ -136,21 +195,26 @@ class _WebUserScreenState extends State<WebUserScreen> {
               ),
           ),
           const SizedBox(height: 24),
-          _sidebarItem("Users", true),
-          _sidebarItem("Daily Challenge", false),
-          _sidebarItem("Avatar Management", false),
-          _sidebarItem("Game Analytics", false),
-          _sidebarItem("Meme Mode", false),
+          _sidebarItem("Users", MenuSection.users),
+          _sidebarItem("Daily Challenge", MenuSection.dailyChallenge),
+          _sidebarItem("Avatar Management", MenuSection.avatarManagement),
+          _sidebarItem("Game Analytics", MenuSection.gameAnalytics),
+          _sidebarItem("Meme Mode", MenuSection.memeMode),
         ],
       ),
     );
   }
-
-  Widget _sidebarItem(String title, bool selected) {
-    return Container(
+  Widget _sidebarItem(String title, MenuSection screen) {
+  return InkWell(
+    onTap: () {
+      setState(() {
+        selectedMenu = screen;
+      });
+    },
+    child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-        color: selected ? AppColors.primaryColor : Colors.transparent,
+        color: selectedMenu == screen ? AppColors.primaryColor : Colors.transparent,
         borderRadius: BorderRadius.circular(8),
       ),
       child: ListTile(
@@ -158,64 +222,68 @@ class _WebUserScreenState extends State<WebUserScreen> {
         title: Text(
           title,
           style: TextStyle(
-            color: selected ? Colors.white : Colors.black,
+            color: selectedMenu == screen ? Colors.white : Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget _buildHeader(bool isDesktop) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            if (!isDesktop)
-              IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-              ),
-            const Text(
-              "Users",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF111827),
-              ),
+Widget _buildHeader(bool isDesktop) {
+  String pageTitle = _getPageTitle(selectedMenu);
+
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Row(
+        children: [
+          if (!isDesktop)
+            IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () => _scaffoldKey.currentState?.openDrawer(),
             ),
-          ],
-        ),
-        Row(
-          children: [
-            const CircleAvatar(
-              radius: 18,
-              backgroundImage: AssetImage("assets/image1.png"),
+          Text(
+            pageTitle, // ✅ dynamic title
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF111827),
             ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  "Olivia Rhye",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                    color: Color(0xFF111827),
-                  ),
+          ),
+        ],
+      ),
+      Row(
+        children: [
+          const CircleAvatar(
+            radius: 18,
+            backgroundImage: AssetImage("assets/image1.png"),
+          ),
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                "Olivia Rhye",
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: Color(0xFF111827),
                 ),
-                Text(
-                  "olivia@untitledui.com",
-                  style: TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+              ),
+              Text(
+                "olivia@untitledui.com",
+                style: TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
 
   /// ✅ Custom Table with full border (row + column lines)
   Widget _buildUserTable(BuildContext context, bool isDesktop) {
@@ -242,7 +310,7 @@ class _WebUserScreenState extends State<WebUserScreen> {
                 1: FixedColumnWidth(200),
                 2: FixedColumnWidth(120),
                 3: FixedColumnWidth(180),
-                4: FixedColumnWidth(120),
+                4: FixedColumnWidth(110),
                 5: FixedColumnWidth(130),
                 6: FixedColumnWidth(80),
               },
@@ -284,7 +352,9 @@ class _WebUserScreenState extends State<WebUserScreen> {
         _dataCell(user["challenges"]),
         _dataCell(user["time"]),
         _statusCell(user["status"]),
-        _actionCell(),
+        _actionCell(
+          user,
+        ),
       ],
     );
   }
@@ -408,20 +478,34 @@ class _WebUserScreenState extends State<WebUserScreen> {
       ),
     );
   }
+ Widget _actionCell(Map<String, dynamic> user) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: PopupMenuButton<String>(
+      icon: const Icon(Icons.more_vert, size: 18),
+      onSelected: (value) {
+        if (value == "view") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UserDetailScreen(user: user),
+            ),
+          );
+        } else if (value == "edit") {
+          // TODO: Handle edit action
+        } else if (value == "delete") {
+          // TODO: Handle delete action
+        }
+      },
+      itemBuilder: (context) => const [
+        PopupMenuItem(value: "view", child: Text("View")),
+        PopupMenuItem(value: "edit", child: Text("Edit")),
+        PopupMenuItem(value: "delete", child: Text("Delete")),
+      ],
+    ),
+  );
+}
 
-  Widget _actionCell() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: PopupMenuButton<String>(
-        icon: const Icon(Icons.more_vert, size: 18),
-        itemBuilder: (context) => const [
-          PopupMenuItem(value: "view", child: Text("View")),
-          PopupMenuItem(value: "edit", child: Text("Edit")),
-          PopupMenuItem(value: "delete", child: Text("Delete")),
-        ],
-      ),
-    );
-  }
 
   Widget _pagination() {
     return Padding(
