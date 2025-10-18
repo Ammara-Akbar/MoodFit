@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moodfit/screens/daily_challenges_screen.dart';
+import 'package:moodfit/screens/mobile_daily_challenges_screen.dart';
 import 'package:moodfit/screens/game/games_screen.dart';
 import 'package:moodfit/screens/setting/setting_screen.dart';
 import 'package:moodfit/screens/dashboard_screen.dart';

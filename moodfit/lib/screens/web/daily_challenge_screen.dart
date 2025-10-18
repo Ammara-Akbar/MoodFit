@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:moodfit/utils/colors.dart';
 
 class DailyChallengeMainSection extends StatefulWidget {
-  const DailyChallengeMainSection({super.key});
+  final VoidCallback onAddNew; // 👈 add callback
 
+  const DailyChallengeMainSection({super.key, required this.onAddNew});
   @override
   State<DailyChallengeMainSection> createState() =>
       _DailyChallengeMainSectionState();
@@ -276,7 +277,7 @@ class _DailyChallengeMainSectionState extends State<DailyChallengeMainSection> {
                       SizedBox(
                         width: isMobile ? 190 : 200,
                         child: ElevatedButton.icon(
-                          onPressed: () {},
+                          onPressed: widget.onAddNew, 
                           icon: const Icon(Icons.add,
                               size: 18, color: Colors.white),
                           label: const Text(
@@ -354,7 +355,7 @@ class _DailyChallengeMainSectionState extends State<DailyChallengeMainSection> {
 
   Widget _addChallengeButton() {
     return ElevatedButton.icon(
-      onPressed: () {},
+       onPressed: widget.onAddNew, 
       icon: const Icon(Icons.add, size: 18, color: Colors.white),
       label: const Text(
         "Add New Challenge",

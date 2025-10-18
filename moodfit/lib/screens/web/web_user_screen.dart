@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:moodfit/screens/web/daily_challenge_screen.dart';
 import 'package:moodfit/screens/web/user_detail_screen.dart';
 import 'package:moodfit/utils/colors.dart';
+
+import 'add_new_challenge_screen.dart';
 enum MenuSection {
   users,
   dailyChallenge,
@@ -40,6 +42,7 @@ class _WebUserScreenState extends State<WebUserScreen> {
   MenuSection selectedMenu = MenuSection.users; // default screen
 
   Map<String, dynamic>? selectedUser;
+   bool showAddChallenge = false; // ✅ <-- Add this line
   final List<Map<String, dynamic>> users = [
     {
       "name": "Ayesha Khan",
@@ -104,7 +107,9 @@ class _WebUserScreenState extends State<WebUserScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final bool isDesktop = screenWidth > 1024;
     final bool isTablet = screenWidth > 768 && screenWidth <= 1024;
-
+    
+ final bool isInAddChallengeScreen =
+      selectedMenu == MenuSection.dailyChallenge && showAddChallenge;
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.white,
@@ -119,7 +124,8 @@ class _WebUserScreenState extends State<WebUserScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildHeader(isDesktop),
+                   // ✅ Hide header only when Add Challenge screen is open
+                  if (!isInAddChallengeScreen) _buildHeader(isDesktop),
                     const SizedBox(height: 24),
                     _buildMainContent(isDesktop),
 
@@ -131,25 +137,27 @@ class _WebUserScreenState extends State<WebUserScreen> {
         ],
       ),
     );
-  }
-Widget _buildMainContent(bool isDesktop) {
-  if (showDetail && selectedUser != null) {
-    return UserDetailScreen(
-      user: selectedUser!,
-      onBack: () {
-        setState(() {
-          showDetail = false;
-          selectedUser = null;
-        });
-      },
-    );
+  }Widget _buildMainContent(bool isDesktop) {
+  // ✅ Daily Challenge Toggle Logic
+  if (selectedMenu == MenuSection.dailyChallenge) {
+    return showAddChallenge
+        ? AddNewChallengeScreen(
+            // when back arrow pressed → go back to daily challenge list
+            onBack: () {
+              setState(() => showAddChallenge = false);
+            },
+          )
+        : DailyChallengeMainSection(
+            onAddNew: () {
+              setState(() => showAddChallenge = true);
+            },
+          );
   }
 
+  // ✅ Other Sections
   switch (selectedMenu) {
     case MenuSection.users:
       return _buildUserTable(context, isDesktop);
-    case MenuSection.dailyChallenge:
-      return const DailyChallengeMainSection();
     case MenuSection.avatarManagement:
       return const Center(child: Text("Avatar Management Screen Coming Soon"));
     case MenuSection.gameAnalytics:
@@ -160,7 +168,6 @@ Widget _buildMainContent(bool isDesktop) {
       return const SizedBox();
   }
 }
-
 
   Widget _buildSidebar() {
     return Container(
