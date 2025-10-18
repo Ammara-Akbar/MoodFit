@@ -20,7 +20,7 @@ class _AddNewAvatarItemScreenState extends State<AddNewAvatarItemScreen> {
   String? category;
   DateTime? scheduleDate;
 
-  final List<String> categoryOptions = ['Outfit', 'Accessory', 'Badge'];
+  final List<String> categoryOptions = ['Outfit', 'Accessory', 'Colors', 'Background'];
 
   Future<void> _pickDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -303,6 +303,7 @@ class _AddNewAvatarItemScreenState extends State<AddNewAvatarItemScreen> {
                 fontWeight: FontWeight.w500, color: Color(0xFF374151))),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
+        
           value: value,
           hint: const Text("Select",
               style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 13)),

@@ -1,33 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:moodfit/utils/colors.dart';
 
-class AvatarManagementMainSection extends StatefulWidget {
-  final VoidCallback onAddNew;
+class MemeModeMainSection extends StatefulWidget {
   final VoidCallback? onViewDetails;
 
-  const AvatarManagementMainSection({
-    super.key,
-    required this.onAddNew,
-    this.onViewDetails,
-  });
+  const MemeModeMainSection({super.key, this.onViewDetails});
 
   @override
-  State<AvatarManagementMainSection> createState() =>
-      _AvatarManagementMainSectionState();
+  State<MemeModeMainSection> createState() => _MemeModeMainSectionState();
 }
 
-class _AvatarManagementMainSectionState
-    extends State<AvatarManagementMainSection> {
-  final List<Map<String, dynamic>> avatars = List.generate(8, (index) {
-    final statuses = ["Active", "Upcoming"];
-    return {
-      "item": "Cozy Hoodie",
-      "type": "Outfit",
-      "unlock": "Earn 100 Mood Points",
-      "challenge": "Daily Calm Boost",
-      "use": "45% users have it",
-      "status": statuses[index % 2],
-    };
+class _MemeModeMainSectionState extends State<MemeModeMainSection> {
+  final List<Map<String, dynamic>> memes = List.generate(6, (index) {
+    final data = [
+      {
+        "username": "Ayesha Khan",
+        "mood": "Calm",
+        "date": "15 October 2025",
+        "caption": "“Breathe. Reset. Repeat.”",
+        "shares": "3,240",
+        "platform": "Instagram",
+        "links": "3,240",
+      },
+      {
+        "username": "Ayesha Khan",
+        "mood": "Happy",
+        "date": "15 October 2025",
+        "caption": "“That’s how you beat anxiety!”",
+        "shares": "3,240",
+        "platform": "TikTok",
+        "links": "3,240",
+      },
+      {
+        "username": "Ayesha Khan",
+        "mood": "Focused",
+        "date": "15 October 2025",
+        "caption": "“No distractions, just vibes.”",
+        "shares": "3,240",
+        "platform": "Facebook",
+        "links": "3,240",
+      },
+      {
+        "username": "Ayesha Khan",
+        "mood": "Stressed",
+        "date": "15 October 2025",
+        "caption": "“Anxiety tried. I won.”",
+        "shares": "3,240",
+        "platform": "Instagram",
+        "links": "3,240",
+      },
+    ];
+    return data[index % data.length];
   });
 
   @override
@@ -40,13 +63,13 @@ class _AvatarManagementMainSectionState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildAvatarTable(context, isDesktop),
+          _buildMemeTable(context, isDesktop),
         ],
       ),
     );
   }
 
-  Widget _buildAvatarTable(BuildContext context, bool isDesktop) {
+  Widget _buildMemeTable(BuildContext context, bool isDesktop) {
     final screenWidth = MediaQuery.of(context).size.width;
     final bool isTablet = screenWidth > 768 && screenWidth <= 1024;
 
@@ -68,17 +91,18 @@ class _AvatarManagementMainSectionState
               ),
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               columnWidths: const {
-                0: FixedColumnWidth(140),
-                1: FixedColumnWidth(80),
-                2: FixedColumnWidth(190),
-                3: FixedColumnWidth(190),
-                4: FixedColumnWidth(140),
-                5: FixedColumnWidth(120),
-                6: FixedColumnWidth(80),
+                0: FixedColumnWidth(110),
+                1: FixedColumnWidth(110),
+                2: FixedColumnWidth(110),
+                3: FixedColumnWidth(220),
+                4: FixedColumnWidth(110),
+                5: FixedColumnWidth(100),
+                6: FixedColumnWidth(110),
+                7: FixedColumnWidth(80),
               },
               children: [
                 _tableRowHeader(),
-                ...avatars.map((a) => _tableRow(a)).toList(),
+                ...memes.map((m) => _tableRow(m)).toList(),
               ],
             ),
           ),
@@ -92,27 +116,29 @@ class _AvatarManagementMainSectionState
     return TableRow(
       decoration: const BoxDecoration(color: Color(0xFFF9FAFB)),
       children: [
-        _headerCell("Avatar Item"),
-        _headerCell("Type"),
-        _headerCell("How to Unlock"),
-        _headerCell("Connected Challenge"),
-        _headerCell("Use %"),
-        _headerCell("Status"),
+        _headerCell("Username"),
+        _headerCell("Mood Type"),
+        _headerCell("Date"),
+        _headerCell("Default Caption"),
+        _headerCell("Total Shares"),
+        _headerCell("Platform"),
+        _headerCell("Total Links Copy"),
         _headerCell("Action"),
       ],
     );
   }
 
-  TableRow _tableRow(Map<String, dynamic> avatar) {
+  TableRow _tableRow(Map<String, dynamic> meme) {
     return TableRow(
       children: [
-        _dataCell(avatar["item"]),
-        _dataCell(avatar["type"]),
-        _dataCell(avatar["unlock"]),
-        _dataCell(avatar["challenge"]),
-        _dataCell(avatar["use"]),
-        _statusCell(avatar["status"]),
-        _actionCell(avatar),
+        _dataCell(meme["username"]),
+        _dataCell(meme["mood"]),
+        _dataCell(meme["date"]),
+        _dataCell(meme["caption"]),
+        _dataCell(meme["shares"]),
+        _dataCell(meme["platform"]),
+        _dataCell(meme["links"]),
+        _actionCell(meme),
       ],
     );
   }
@@ -141,52 +167,7 @@ class _AvatarManagementMainSectionState
     );
   }
 
-  Widget _statusCell(String status) {
-    Color bg;
-    Color border;
-    Color text;
-
-    switch (status) {
-      case "Active":
-        bg = const Color(0xFFDCFCE7);
-        border = const Color(0xFF86EFAC);
-        text = const Color(0xFF166534);
-        break;
-      case "Upcoming":
-        bg = const Color(0xFFE0F2FE);
-        border = const Color(0xFF60A5FA);
-        text = const Color(0xFF1E40AF);
-        break;
-      default:
-        bg = const Color(0xFFF3F4F6);
-        border = const Color(0xFFD1D5DB);
-        text = const Color(0xFF6B7280);
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          color: bg,
-          border: Border.all(color: border),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Center(
-          child: Text(
-            status,
-            style: TextStyle(
-              color: text,
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _actionCell(Map<String, dynamic> avatar) {
+  Widget _actionCell(Map<String, dynamic> meme) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: PopupMenuButton<String>(
@@ -194,15 +175,12 @@ class _AvatarManagementMainSectionState
         onSelected: (value) {
           if (value == "view") {
             widget.onViewDetails?.call();
-          } else if (value == "edit") {
-            // TODO: Handle edit action
           } else if (value == "delete") {
-            // TODO: Handle delete action
+            // TODO: Handle delete
           }
         },
         itemBuilder: (context) => const [
           PopupMenuItem(value: "view", child: Text("View")),
-          PopupMenuItem(value: "edit", child: Text("Edit")),
           PopupMenuItem(value: "delete", child: Text("Delete")),
         ],
       ),
@@ -222,7 +200,7 @@ class _AvatarManagementMainSectionState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Avatar List",
+                  "Memes List",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -232,18 +210,30 @@ class _AvatarManagementMainSectionState
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    _searchField(190),
+                    _searchField(160),
                     const SizedBox(width: 12),
-                    _addButton(isMobile ? 180 : 200),
+                    _moodDropdown(150),
+                   
                   ],
                 ),
+                const SizedBox(height: 12),
+                 Row(
+                  children: [
+                   
+                    
+                    _platformDropdown(150),
+                    const SizedBox(width: 12),
+                    _dateButton(150),
+                  ],
+                ),
+
               ],
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "Avatar List",
+                  "Memes List",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -252,9 +242,13 @@ class _AvatarManagementMainSectionState
                 ),
                 Row(
                   children: [
-                    _searchField(260),
+                    _searchField(170),
                     const SizedBox(width: 12),
-                    _addButton(200),
+                    _moodDropdown(140),
+                    const SizedBox(width: 12),
+                    _platformDropdown(130),
+                    const SizedBox(width: 12),
+                    _dateButton(130),
                   ],
                 ),
               ],
@@ -269,47 +263,70 @@ class _AvatarManagementMainSectionState
       child: TextField(
         decoration: InputDecoration(
           hintText: "Search",
-          hintStyle: TextStyle(color: Colors.grey.shade300),
-          prefixIcon: Icon(Icons.search, color: Colors.grey.shade500),
+          hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+          prefixIcon: Icon(Icons.search, color: Colors.grey.shade300),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey.shade200),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: AppColors.primaryColor),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey.shade200),
+            borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(
+              color: AppColors.primaryColor,
+              width: 1.6,
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _addButton(double width) {
+  Widget _moodDropdown(double width) {
+    return _dropdownButton(width, "Select Mood Type");
+  }
+
+  Widget _platformDropdown(double width) {
+    return _dropdownButton(width, "Select Platform");
+  }
+
+  Widget _dropdownButton(double width, String label) {
+    return Container(
+      width: width,
+      height: 40,
+      decoration: BoxDecoration(
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(label, style: TextStyle(color: Colors.grey.shade400, fontSize: 11)),
+          const SizedBox(width: 10),
+          Icon(Icons.arrow_drop_down, color: Colors.grey.shade400),
+        ],
+      ),
+    );
+  }
+
+  Widget _dateButton(double width) {
     return SizedBox(
       width: width,
-      child: ElevatedButton.icon(
-        onPressed: widget.onAddNew,
-        icon: const Icon(Icons.add, size: 18, color: Colors.white),
-        label: const Text(
-          "Add New Avatar Item",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-            fontSize: 13,
-          ),
-        ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryColor,
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(22),
-          ),
+      height: 40,
+      child: OutlinedButton.icon(
+        onPressed: () {},
+        icon: Icon(Icons.calendar_today_outlined,
+            size: 16, color: Colors.grey.shade400),
+        label: Text("Select dates",
+            style: TextStyle(color: Colors.grey.shade400, fontSize: 11)),
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: Color(0xFFE5E7EB)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       ),
     );

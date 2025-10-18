@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:moodfit/screens/web/add_avatar_screen.dart';
+import 'package:moodfit/screens/web/avatar_detail_screen.dart';
 import 'package:moodfit/screens/web/avatar_unlock_managment_screen.dart';
 import 'package:moodfit/screens/web/daily_challenge_screen.dart';
+import 'package:moodfit/screens/web/game_analytics_game_screen.dart';
+import 'package:moodfit/screens/web/meme_mode_section_screen.dart';
 import 'package:moodfit/screens/web/user_detail_screen.dart';
 import 'package:moodfit/utils/colors.dart';
 
@@ -107,8 +110,11 @@ class _WebUserScreenState extends State<WebUserScreen> {
   ];
   bool showUserDetail = false;
   bool showAddAvatar = false;
+  bool showAddAvatarItem = false;
+bool showAvatarDetail = false;
 
   bool showChallengeDetails = false;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -116,15 +122,17 @@ class _WebUserScreenState extends State<WebUserScreen> {
     final bool isDesktop = screenWidth > 1024;
     final bool isTablet = screenWidth > 768 && screenWidth <= 1024;
     ////////
+    
     final bool isInChallengeSubScreen =
     selectedMenu == MenuSection.dailyChallenge &&
         (showAddChallenge || showChallengeDetails);
 
 final bool isInUserSubScreen =
     selectedMenu == MenuSection.users && showUserDetail;
-
 final bool isInAvatarSubScreen =
-    selectedMenu == MenuSection.avatarManagement && showAddAvatar;
+    selectedMenu == MenuSection.avatarManagement &&
+    (showAddAvatar || showAvatarDetail);
+
 
 // 👇 combine all three
 final bool hideHeader =
@@ -206,25 +214,48 @@ final bool hideHeader =
 
     // ✅ Other Sections
     switch (selectedMenu) {
-      case MenuSection.avatarManagement:
-        if (showAddAvatar) {
-          return AddNewAvatarItemScreen(
-            onBack: () {
-              setState(() => showAddAvatar = false);
-            },
-          );
-        }
+     case MenuSection.avatarManagement:
+  if (showAddAvatar) {
+    return AddNewAvatarItemScreen(
+      onBack: () {
+        setState(() => showAddAvatar = false);
+      },
+    );
+  }
 
-        return AvatarManagementMainSection(
-          onAddNew: () {
-            setState(() => showAddAvatar = true);
-          },
-        );
+ if (showAvatarDetail) {
+  return AvatarItemDetailScreen(
+    avatarItem: {
+      "itemName": "Cozy Hoodie",
+      "category": "Outfit",
+      "rewardType": "Points",
+      "moodPoints": "+10 pts",
+      "status": "Upcoming",
+      "description":
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "image": "assets/profile1.png",
+    },
+    onBack: () {
+      setState(() => showAvatarDetail = false);
+    },
+  );
+}
+
+
+  return AvatarManagementMainSection(
+    onAddNew: () {
+      setState(() => showAddAvatar = true);
+    },
+    onViewDetails: () {
+      setState(() => showAvatarDetail = true);
+    },
+  );
+
 
       case MenuSection.gameAnalytics:
-        return const Center(child: Text("Game Analytics Screen Coming Soon"));
+        return GameAnalyticsMainSection();
       case MenuSection.memeMode:
-        return const Center(child: Text("Meme Mode Screen Coming Soon"));
+        return MemeModeMainSection();
       default:
         return const SizedBox();
     }
